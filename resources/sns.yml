@@ -5,7 +5,3 @@ Resources:
       # Generate a name based on the stage
       DisplayName: ${opt:stage}-sns-topic-${self:service}
       TopicName: ${opt:stage}-sns-topic-${self:service}
-      Subscription:
-        -
-          Endpoint: jefp@amazon.com
-          Protocol: email
