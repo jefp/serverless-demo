@@ -2,7 +2,7 @@
 
 Serverless Framework demo architecture using [Serverless.com framework](https://Serverless.com/), [AWS AppSync](https://aws.amazon.com/appsync/), and [Vue Apollo](https://github.com/Akryum/vue-apollo)
 
-![](https://i.imgur.com/9TdyOOi.jpg)
+![](https://raw.githubusercontent.com/jefp/serverless-demo/master/architecture.png)
 
 
 ## Getting started
