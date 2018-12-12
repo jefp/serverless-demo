@@ -26,7 +26,8 @@ provider:
       Action:
         - "s3:*"
       Resource: 
-        - "*"
+        - arn:aws:s3:::${opt:stage}-bucket-${self:service}
+        - arn:aws:s3:::${opt:stage}-bucket-${self:service}/*
     - Effect: Allow
       Action:
         - SNS:Publish
