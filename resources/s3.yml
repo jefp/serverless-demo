@@ -1,0 +1,18 @@
+Resources:
+  S3BucketAlarms:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Delete
+      Properties:
+        BucketName: ${opt:stage}-bucket-${self:service}
+  CallerLambdaPermissionAlarmsS3:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName:
+        "Fn::GetAtt":
+          - CallerLambdaFunction
+          - Arn
+      Principal: "s3.amazonaws.com"
+      Action: "lambda:InvokeFunction"
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn: arn:aws:s3:::${opt:stage}-bucket-${self:service}

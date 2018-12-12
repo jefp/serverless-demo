@@ -1,0 +1,118 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: serverless-techsummit # NOTE: update this with your service name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: ruby2.5
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: 
+        - "*"
+    - Effect: Allow
+      Action:
+        - SNS:Publish
+      Resource:
+        -  "Ref": SNSAlarm
+    - Effect: Allow
+      Action:
+        - polly:SynthesizeSpeech
+      Resource: 
+        - '*'
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource:
+        - "Fn::GetAtt": [ AlarmTable, Arn ]
+#
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.py
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.py
+#    - exclude-me-dir/**
+
+functions:
+  receive:
+    handler: functions/receive.handler
+    name: list-${opt:stage}-${self:service}
+    memorySize: 512 # optional, in MB, default is 1024
+    timeout: 30 # optional, in seconds, default is 6
+    description: Receive alarms
+    reservedConcurrency: 5 # optional, reserved concurrency limit for this function. By default, AWS uses account concurrency limit
+    events:
+      - http:
+          path: alarm/receiver
+          method: post
+      - iot:
+          sql: "SELECT * FROM 'alarm_receiver'"
+    environment:
+      S3: ${opt:stage}-bucket-${self:service}
+      SNS:
+        "Ref": SNSAlarm
+      DYNAMO_TABLE: ${opt:stage}-${self:service}-alarm-table
+
+  process:
+    handler: functions/process.handler
+    runtime: python3.6
+    name: process-${opt:stage}-${self:service}
+    environment:
+      DYNAMO_TABLE: ${opt:stage}-${self:service}-alarm-table
+      S3: ${opt:stage}-bucket-${self:service}
+    events:
+      - sns:
+          arn:
+            Fn::Join:
+              - ""
+              - - "arn:aws:sns:"
+                - Ref: "AWS::Region"
+                - ":"
+                - Ref: "AWS::AccountId"
+                - ":${opt:stage}-sns-topic-${self:service}"
+          topicName: ${opt:stage}-sns-topic-${self:service}
+
+  caller: 
+    handler: functions/caller.handler
+    runtime: nodejs8.10
+    events:
+      - s3: alarms
+    environment:
+      PHONE_NUMBER: "+56977582200"
+      TWILIO_ACCOUNT_SID: AC66b0fda9d9b828383f7be438e18f28e8
+      TWILIO_AUTH_TOKEN: ef89f6a0c5d9e95004fb943167ccd997
+      TWILIO_FROM_NUMBER: "+56226665912"
+
+# you can add CloudFormation resource templates here
+resources:
+  - ${file(resources/sns.yml)}
+  - ${file(resources/s3.yml)}
+  - ${file(resources/dynamodb.yml)}
