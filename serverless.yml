@@ -106,10 +106,10 @@ functions:
     events:
       - s3: alarms
     environment:
-      PHONE_NUMBER: "+56977582200"
-      TWILIO_ACCOUNT_SID: AC66b0fda9d9b828383f7be438e18f28e8
-      TWILIO_AUTH_TOKEN: ef89f6a0c5d9e95004fb943167ccd997
-      TWILIO_FROM_NUMBER: "+56226665912"
+      PHONE_NUMBER: $$PHONE_NUMBER$$
+      TWILIO_ACCOUNT_SID: $$TWILIO_ACCOUNT_SID$$
+      TWILIO_AUTH_TOKEN: $$TWILIO_AUTH_TOKEN$$
+      TWILIO_FROM_NUMBER: $$TWILIO_FROM_NUMBER$$
 
 # you can add CloudFormation resource templates here
 resources:

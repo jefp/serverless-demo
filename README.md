@@ -49,7 +49,9 @@ gem install bundler
 bundle install --deployment
 ```
 
-5. Deploy serverless application
+5. Update twilio credentials in serverless.yml file
+
+6. Deploy serverless application
 
 ```
 serverless deploy -s dev
