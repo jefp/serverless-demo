@@ -1,6 +1,6 @@
 # Serverless Framework demo
 
-Serverless Framework demo architecture using [Serverless.com framework](https://Serverless.com/), [AWS AppSync](https://aws.amazon.com/appsync/), and [Vue Apollo](https://github.com/Akryum/vue-apollo)
+Serverless Framework demo architecture using [Serverless.com framework](https://serverless.com/), [AWS Lambda](https://aws.amazon.com/lambda/), [DynamoDB](https://aws.amazon.com/dynamodb/), [Amazon Polly](https://aws.amazon.com/polly/), and [Amazon S3](https://aws.amazon.com/s3/)
 
 ![](https://raw.githubusercontent.com/jefp/serverless-demo/master/architecture.png)
 
@@ -50,6 +50,13 @@ bundle install --deployment
 ```
 
 5. Update twilio credentials in serverless.yml file
+
+```
+      PHONE_NUMBER: $$PHONE_NUMBER$$
+      TWILIO_ACCOUNT_SID: $$TWILIO_ACCOUNT_SID$$
+      TWILIO_AUTH_TOKEN: $$TWILIO_AUTH_TOKEN$$
+      TWILIO_FROM_NUMBER: $$TWILIO_FROM_NUMBER$$
+```
 
 6. Deploy serverless application
 
